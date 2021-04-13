@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Comment {
+  id         String   @id @db.Uuid
+  message    String
+  createdAt DateTime @db.Timestamptz(6) @default(now())
+  updatedAt DateTime @db.Timestamptz(6) @updatedAt
+  taskId    String?  @db.Uuid
+  authorId  String?  @db.Uuid
+  users      User?   @relation(fields: [authorId], references: [id])
+  tasks      Task?   @relation(fields: [taskId], references: [id])
+	@@map("comments")
+}
+
+model Project {
+  id            String     @id @db.Uuid
+  title         String     @db.VarChar(255)
+  accessibility Boolean?   @default(false)
+  createdAt    DateTime   @db.Timestamptz(6) @default(now())
+  updatedAt    DateTime   @db.Timestamptz(6) @updatedAt
+  owner         String?    @db.Uuid
+  users         User?     @relation(fields: [owner], references: [id])
+  sections      Section[]
+	@@map("projects")
+}
+
+model Section {
+  id         String    @id @db.Uuid
+  title      String    @db.VarChar(255)
+  order      Int       @unique @default(autoincrement())
+  createdAt DateTime  @db.Timestamptz(6) @default(now())
+  updatedAt DateTime  @db.Timestamptz(6) @updatedAt
+  projectId String?   @db.Uuid
+  projects   Project? @relation(fields: [projectId], references: [id])
+  tasks      Task[]
+	@@map("sections")
+}
+
+model Task {
+  id          String     @id @db.Uuid
+  title       String     @db.VarChar(255)
+  dueDate    DateTime?  @db.Timestamptz(6)
+  description String?
+  createdAt  DateTime   @db.Timestamptz(6) @default(now())
+  updatedAt  DateTime   @db.Timestamptz(6) @updatedAt
+  sectionId  String?    @db.Uuid
+  sections    Section?  @relation(fields: [sectionId], references: [id])
+  comments    Comment[]
+	@@map("tasks")
+}
+
+model User {
+  id                  String     @id @db.Uuid @default(uuid())
+  email               String     @unique @db.VarChar(255)
+  password            String?    @db.VarChar(255)
+  name                String?    @default("unknown") @db.VarChar(255)
+  role                String?    @default("user") @db.VarChar(255)
+  resetToken         String?    @db.VarChar(255) @map("reset_token")
+  resetTokenExpires DateTime?  @db.Timestamptz(6) @map("reset_token_expires")
+  createdAt          DateTime   @db.Timestamptz(6) @default(now())
+  updatedAt          DateTime   @db.Timestamptz(6) @updatedAt
+  comments            Comment[]
+  projects            Project[]
+	@@map("users")
+}
