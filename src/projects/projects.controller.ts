@@ -34,8 +34,6 @@ export class ProjectsController {
   @Public()
   @Get(':id')
   findOne(@Param('id') id: number) {
-    console.log(typeof id === 'number'); // true
-
     return id;
   }
 
