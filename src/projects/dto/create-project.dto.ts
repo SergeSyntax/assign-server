@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateProjectDto {
   @IsNotEmpty()
@@ -8,5 +8,5 @@ export class CreateProjectDto {
 
   @IsNotEmpty()
   @IsBoolean()
-  password: string;
+  accessibility: boolean;
 }

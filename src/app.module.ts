@@ -7,6 +7,8 @@ import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ConfigModule } from '@nestjs/config';
+import { SectionsModule } from './sections/sections.module';
+import { CommentsModule } from './comments/comments.module';
 import configuration from './config/configuration';
 
 @Global()
@@ -17,6 +19,8 @@ import configuration from './config/configuration';
     ProjectsModule,
     AuthModule,
     TasksModule,
+    SectionsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
